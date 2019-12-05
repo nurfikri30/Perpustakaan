@@ -175,7 +175,23 @@ namespace PerpustakaanAppMVC.Controller
 
             return list;
         }
+        public List<Mahasiswa> ReadByNama(int npm)
+        {
+            // membuat objek collection
+            List<Mahasiswa> list = new List<Mahasiswa>();
 
+            // membuat objek context menggunakan blok using
+            using (DbContext context = new DbContext())
+            {
+                // membuat objek dari class repository
+                _repository = new MahasiswaRepository(context);
+
+                // panggil method GetByNama yang ada di dalam class repository
+                list = _repository.ReadByNama(Convert.ToString(npm));
+            }
+
+            return list;
+        }
 
     }
 }

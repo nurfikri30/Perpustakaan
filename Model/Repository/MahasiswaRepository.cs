@@ -174,6 +174,50 @@ namespace PerpustakaanAppMVC.Model.Repository
 
             return list;
         }
+        public List<Mahasiswa> ReadByNpm(int npm)
+        {
+            // membuat objek collection untuk menampung objek mahasiswa
+            List<Mahasiswa> list = new List<Mahasiswa>();
+
+            try
+            {
+                // deklarasi perintah SQL
+                string sql = @"select npm, nama, angkatan 
+                        from mahasiswa 
+                        where npm like @npm
+                        ";
+
+                // membuat objek command menggunakan blok using
+                using (OleDbCommand cmd = new OleDbCommand(sql, _conn))
+                {
+                    // mendaftarkan parameter dan mengeset nilainya
+                    cmd.Parameters.AddWithValue("@npm", "%" + npm + "%");
+
+                    // membuat objek dtr (data reader) untuk menampung result set (hasil perintah SELECT)
+                    using (OleDbDataReader dtr = cmd.ExecuteReader())
+                    {
+                        // panggil method Read untuk mendapatkan baris dari result set
+                        while (dtr.Read())
+                        {
+                            // proses konversi dari row result set ke object
+                            Mahasiswa mhs = new Mahasiswa();
+                            mhs.Npm = dtr["npm"].ToString();
+                            mhs.Nama = dtr["nama"].ToString();
+                            mhs.Angkatan = dtr["angkatan"].ToString();
+
+                            // tambahkan objek mahasiswa ke dalam collection
+                            list.Add(mhs);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Print("ReadByNama error: {0}", ex.Message);
+            }
+
+            return list;
+        }
 
 
 
